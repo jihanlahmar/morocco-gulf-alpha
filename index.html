@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Morocco–Gulf Alpha Monitor</title>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    h1 { color: #003366; }
+    .metric { background: #f8f9fa; padding: 12px; margin: 8px 0; border-left: 4px solid #007acc; }
+    .change.pos { color: green; }
+    .change.neg { color: red; }
+    .footer { margin-top: 40px; color: #666; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <h1>🇲🇦→🇦🇪🇸🇦🇶🇦 Morocco–Gulf Capital Flow Monitor</h1>
+  <p>Live tracking of FX, assets & risks relevant to Gulf SWF investments in Morocco.</p>
+  
+  <div id="data">Loading...</div>
+  
+  <div class="footer">
+    <p>Data updated daily | Python-driven | Public alpha by <a href="https://linkedin.com/in/yourprofile">[Your Name]</a></p>
+    <p>Source: <a href="https://github.com/yourusername/morocco-gulf-alpha">GitHub Repo</a> | <a href="https://gist.github.com/...">Latest Snapshot</a></p>
+  </div>
+
+  <script>
+    // Fetch your latest snapshot (replace with your Gist raw URL)
+    fetch('https://gist.githubusercontent.com/yourname/.../raw/.../snapshot.json')
+      .then(r => r.json())
+      .then(d => {
+        let html = `<p><strong>Last update:</strong> ${d.date}</p>`;
+        for (const [key, val] of Object.entries(d.data)) {
+          if (val.error) continue;
+          const changeClass = val.change_1d_pct >= 0 ? 'pos' : 'neg';
+          html += `
+            <div class="metric">
+              <strong>${key}</strong>: ${val.price} 
+              <span class="change ${changeClass}">(${val.change_1d_pct}%)</span>
+            </div>
+          `;
+        }
+        document.getElementById('data').innerHTML = html;
+      })
+      .catch(e => document.getElementById('data').innerHTML = '<p>⚠️ Loading data...</p>');
+  </script>
+</body>
+</html>
