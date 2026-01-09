@@ -1,38 +1,36 @@
 import yfinance as yf
-import investpy as iv
-import pandas as pd
 import json
 from datetime import datetime
 
-# Gulf & Morocco tickers
 tickers = {
     "MAD_USD": "MADUSD=X",
     "SAR_USD": "SARUSD=X",
     "AED_USD": "AEDUSD=X",
-    "TASI": "^TASI",
-    "ADX": "ADX.AE",
-    "OCP": "OCP.MA"  # Verify symbol; if not on yfinance, skip for now
+    "TASI_Saudi": "^TASI",
+    "ADX_UAE": "ADX.AE",
+    "Fertilizer_ETF_SOIL": "SOIL"
 }
 
 data = {}
-today = datetime.utcnow().strftime("%Y-%m-%d")
-
 for name, ticker in tickers.items():
     try:
         hist = yf.Ticker(ticker).history(period="5d")
-        if not hist.empty:
-            data[name] = {
-                "price": round(hist['Close'][-1], 4),
-                "change_1d_pct": round((hist['Close'][-1] / hist['Close'][-2] - 1) * 100, 2)
-            }
-    except Exception as e:
-        data[name] = {"error": str(e)}
+        if len(hist) >= 2:
+            price = round(hist['Close'][-1], 4)
+            change = round((hist['Close'][-1] / hist['Close'][-2] - 1) * 100, 2)
+            data[name] = {"price": price, "change_1d_pct": change}
+        else:
+            data[name] = {"error": "no_data"}
+    except:
+        data[name] = {"error": "fetch_failed"}
 
-# Commodity: Phosphate (proxy via fertilizer ETF or tradingeconomics later)
-# For now, use placeholder or skip
+snapshot = {
+    "date": datetime.utcnow().strftime("%Y-%m-%d"),
+    "data": data
+}
 
-# Save as JSON
-with open("snapshot.json", "w") as f:
-    json.dump({"date": today, "data": data}, f, indent=2)
+with open("/content/snapshot.json", "w") as f:
+    json.dump(snapshot, f, indent=2)
 
-print(f"Snapshot saved for {today}")
+print("✅ SUCCESS! Your snapshot.json is ready.")
+print("Now click the folder icon on the left → find 'snapshot.json' → right-click → Download")
