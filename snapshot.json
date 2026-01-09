@@ -1,0 +1,27 @@
+{
+  "date": "2026-01-09",
+  "data": {
+    "MAD_USD": {
+      "price": 0.1082,
+      "change_1d_pct": -0.33
+    },
+    "SAR_USD": {
+      "price": 0.2667,
+      "change_1d_pct": -0.11
+    },
+    "AED_USD": {
+      "price": 0.2723,
+      "change_1d_pct": -0.04
+    },
+    "TASI_Saudi": {
+      "error": "no_data"
+    },
+    "ADX_UAE": {
+      "error": "no_data"
+    },
+    "Fertilizer_ETF_SOIL": {
+      "price": 2.44,
+      "change_1d_pct": 4.27
+    }
+  }
+}
