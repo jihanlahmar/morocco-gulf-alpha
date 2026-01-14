@@ -4,12 +4,36 @@
   <title>Morocco–Gulf Alpha Monitor</title>
   <meta charset="utf-8">
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
-    h1 { color: #003366; }
-    .metric { background: #f8f9fa; padding: 12px; margin: 8px 0; border-left: 4px solid #007acc; }
-    .change.pos { color: green; }
-    .change.neg { color: red; }
-    .footer { margin-top: 40px; color: #666; font-size: 0.9em; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+      background: #f8fafc;
+      color: #0f172a;
+    }
+    h1 {
+      color: #003366;
+      font-weight: 600;
+    }
+    .metric {
+      background: #f1f5f9;
+      padding: 14px;
+      margin: 10px 0;
+      border-left: 4px solid #3b82f6;
+      border-radius: 0 4px 4px 0;
+    }
+    .change.pos { color: #10b981; font-weight: 600; }
+    .change.neg { color: #ef4444; font-weight: 600; }
+    .footer {
+      margin-top: 40px;
+      color: #64748b;
+      font-size: 0.9em;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 20px;
+    }
+    .footer a { color: #3b82f6; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -19,29 +43,39 @@
   <div id="data">Loading...</div>
   
   <div class="footer">
-    <p>Data updated daily | Python-driven | Public alpha by <a href="https://linkedin.com/in/jihanlahmar">[jihan lahmar]</a></p>
-    <p>Source: <a href="https://github.com/jihanlahmar/morocco-gulf-alpha">GitHub Repo</a> | <a href="https://gist.github.com/...">Latest Snapshot</a></p>
+    <p>Data updated 2x/week | Python-driven | Public alpha by <a href="https://linkedin.com/in/jihanlahmar">Jihan Lahmar</a></p>
+    <p>Source: <a href="https://github.com/jihanlahmar/morocco-gulf-alpha">GitHub Repo</a> | 
+       <a href="https://gist.github.com/jihanlahmar/006c5d04308e66a4777c090dbf024839">Latest Snapshot</a></p>
   </div>
 
   <script>
-    // Fetch your latest snapshot (replace with your Gist raw URL)
-    fetch('https://gist.githubusercontent.com/jihanlahmar/006c5d04308e66a4777c090dbf024839/raw/92b7d6934bd1bc62cbdb52b859af41ce32486c76/gistfile1.txt')
-      .then(r => r.json())
-      .then(d => {
-        let html = `<p><strong>Last update:</strong> ${d.date}</p>`;
-        for (const [key, val] of Object.entries(d.data)) {
+    // ✅ YOUR VALID JSON GIST URL
+    const GIST_URL = 'https://gist.githubusercontent.com/jihanlahmar/006c5d04308e66a4777c090dbf024839/raw/d2bcae152b4100ec6f31cb69150ce0a9be98b8f5/snapshot.json';
+
+    fetch(GIST_URL)
+      .then(response => {
+        if (!response.ok) throw new Error('Gist not found');
+        return response.json();
+      })
+      .then(data => {
+        let html = `<p><strong>Last update:</strong> ${data.date}</p>`;
+        for (const [key, val] of Object.entries(data.data)) {
           if (val.error) continue;
           const changeClass = val.change_1d_pct >= 0 ? 'pos' : 'neg';
+          const sign = val.change_1d_pct >= 0 ? '+' : '';
           html += `
             <div class="metric">
-              <strong>${key}</strong>: ${val.price} 
-              <span class="change ${changeClass}">(${val.change_1d_pct}%)</span>
+              <strong>${key.replace(/_/g, ' ')}</strong>: ${val.price}
+              <span class="change ${changeClass}">${sign}${val.change_1d_pct}%</span>
             </div>
           `;
         }
         document.getElementById('data').innerHTML = html;
       })
-      .catch(e => document.getElementById('data').innerHTML = '<p>⚠️ Loading data...</p>');
+      .catch(err => {
+        document.getElementById('data').innerHTML = `<p style="color:#ef4444">⚠️ Failed to load data. Check Gist URL.</p>`;
+        console.error("Dashboard error:", err);
+      });
   </script>
 </body>
 </html>
