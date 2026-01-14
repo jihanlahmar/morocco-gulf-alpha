@@ -1,230 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MA→GCC | Jihan Lahmar</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Morocco–Gulf Monitor</title>
+  <meta charset="utf-8">
   <style>
-    body {
-      background: #f8fafc;
-      color: #0f172a;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 2rem 1.5rem;
-      line-height: 1.5;
-    }
-    .container { max-width: 900px; margin: 0 auto; }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 1rem;
-    }
-    h1 {
-      font-weight: 600;
-      font-size: 1.4rem;
-      color: #003366;
-    }
-    .social a {
-      color: #3b82f6;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-
-    .chart-container {
-      height: 160px;
-      margin: 1.5rem 0 2rem;
-      background: #f1f5f9;
-      border-radius: 8px;
-      padding: 12px;
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-      gap: 14px;
-      margin-bottom: 2rem;
-    }
-    .metric-card {
-      background: #f1f5f9;
-      padding: 14px;
-      border-radius: 8px;
-      border-left: 3px solid #3b82f6;
-    }
-    .metric-label { font-size: 0.85rem; color: #475569; margin-bottom: 4px; }
-    .metric-value { font-size: 1.1rem; font-weight: 600; }
-    .up { color: #10b981; }
-    .down { color: #ef4444; }
-
-    .news-ticker {
-      background: #f1f5f9;
-      padding: 14px;
-      border-radius: 8px;
-      margin-bottom: 2rem;
-    }
-    .news-title {
-      font-size: 0.9rem;
-      color: #475569;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-    .news-item {
-      font-size: 0.95rem;
-      color: #0f172a;
-      margin: 0;
-      height: 24px;
-      overflow: hidden;
-    }
-    .news-item a { color: #0f172a; text-decoration: none; }
-    .news-item a:hover { text-decoration: underline; }
-
-    footer {
-      margin-top: 2rem;
-      color: #64748b;
-      font-size: 0.85rem;
-      text-align: center;
-      border-top: 1px solid #e2e8f0;
-      padding-top: 1.5rem;
-    }
+    body { font-family: sans-serif; max-width: 700px; margin: 40px auto; padding: 0 20px; }
+    h1 { color: #003366; }
+    .metric { background: #f8f9fa; padding: 12px; margin: 8px 0; border-left: 4px solid #007acc; }
+    .change.up { color: green; }
+    .change.down { color: red; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>🇲🇦→🇸🇦🇦🇪🇶🇦 CAPITAL FLOW MONITOR</h1>
-      <div class="social">
-        <a href="https://linkedin.com/in/jihanlahmar" target="_blank">in/jihanlahmar</a>
-      </div>
-    </header>
-
-    <p id="last-update" style="color:#475569; font-size:0.95rem;">Loading...</p>
-
-    <!-- Chart -->
-    <div class="chart-container">
-      <canvas id="priceChart"></canvas>
-    </div>
-
-    <!-- Metrics Grid -->
-    <div class="metrics" id="metrics"></div>
-
-    <!-- News Ticker -->
-    <div class="news-ticker">
-      <div class="news-title">LATEST MOROCCO–GULF NEWS</div>
-      <p class="news-item" id="news-slide">Loading headlines...</p>
-    </div>
-
-    <footer>
-      Rabat • Sovereign-grade alpha • Updated 2x/week
-    </footer>
-  </div>
+  <h1>🇲🇦→🇸🇦🇦🇪🇶🇦 Capital Flow Monitor</h1>
+  <div id="data">Loading...</div>
 
   <script>
-    // 🔗 YOUR VALID JSON GIST (NO TRAILING SPACES)
-    const GIST_URL = 'https://gist.githubusercontent.com/jihanlahmar/006c5d04308e66a4777c090dbf024839/raw/e312ca3855724aff445798d81913a1625fe52388/snapshot.json';
-
-    // 📰 Static news headlines
-    const newsHeadlines = [
-      "PIF explores $500M green ammonia JV with OCP in Laayoune",
-      "MAD black-market premium widens to 4% amid import surge",
-      "ADQ signs logistics MoU for Tanger Med Zone 3 expansion",
-      "Saudi MISA delegation visits Rabat for fintech corridor talks"
-    ];
-
-    let chartInstance = null;
-    let newsIndex = 0;
-
-    // Fetch data
-    fetch(GIST_URL)
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('last-update').textContent = `Last update: ${data.date}`;
-
-        const assets = ['MAD_USD', 'SAR_USD', 'AED_USD', 'Fertilizer_ETF_SOIL'];
-        const metricsDiv = document.getElementById('metrics');
-        assets.forEach(key => {
-          const val = data.data[key];
-          if (!val || val.error) return;
+    // ONLY thing that matters: your clean JSON Gist URL
+    fetch('https://gist.githubusercontent.com/jihanlahmar/006c5d04308e66a4777c090dbf024839/raw/e312ca3855724aff445798d81913a1625fe52388/snapshot.json')
+      .then(r => r.json())
+      .then(d => {
+        let html = `<p><strong>Last update:</strong> ${d.date}</p>`;
+        for (const [key, val] of Object.entries(d.data)) {
+          if (val.error) continue;
           const cls = val.change_1d_pct >= 0 ? 'up' : 'down';
           const sign = val.change_1d_pct >= 0 ? '+' : '';
-          metricsDiv.innerHTML += `
-            <div class="metric-card">
-              <div class="metric-label">${key.replace(/_/g, ' ')}</div>
-              <div class="metric-value">
-                ${val.price} <span class="${cls}">${sign}${val.change_1d_pct}%</span>
-              </div>
-            </div>
-          `;
-        });
-
-        // Render chart
-        const ctx = document.getElementById('priceChart').getContext('2d');
-        const baseMAD = data.data.MAD_USD?.price || 0.1086;
-        const madTrend = [baseMAD + 0.0005, baseMAD + 0.0003, baseMAD + 0.0002, baseMAD + 0.0001, baseMAD];
-        const sarVal = data.data.SAR_USD?.price || 0.2667;
-        const sarTrend = Array(5).fill(sarVal);
-
-        chartInstance = new Chart(ctx, {
-          type: 'line',
-           {
-            labels: ['5d','4d','3d','2d','1d'],
-            datasets: [{
-              label: 'MAD/USD',
-              data: madTrend,
-              borderColor: '#10b981',
-              borderWidth: 2,
-              tension: 0.3
-            }, {
-              label: 'SAR/USD',
-              data: sarTrend,
-              borderColor: '#3b82f6',
-              borderWidth: 1,
-              borderDash: [4, 2],
-              tension: 0.3
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                labels: {
-                  font: { size: 10 },
-                  color: '#475569'
-                }
-              }
-            },
-            scales: {
-              x: {
-                ticks: { color: '#64748b' },
-                grid: { color: '#e2e8f0' }
-              },
-              y: {
-                ticks: { color: '#64748b' },
-                grid: { color: '#e2e8f0' }
-              }
-            }
-          }
-        });
+          html += `<div class="metric"><strong>${key}</strong>: ${val.price} <span class="change ${cls}">${sign}${val.change_1d_pct}%</span></div>`;
+        }
+        document.getElementById('data').innerHTML = html;
       })
-      .catch(err => {
-        document.getElementById('last-update').innerHTML = '<span style="color:#ef4444">⚠️ Data feed offline</span>';
+      .catch(e => {
+        document.getElementById('data').innerHTML = '<p style="color:red">❌ Failed to load data.</p>';
+        console.error(e);
       });
-
-    // Rotate news
-    function rotateNews() {
-      const el = document.getElementById('news-slide');
-      el.style.opacity = 0;
-      setTimeout(() => {
-        el.innerHTML = `<a href="#" target="_blank">${newsHeadlines[newsIndex]}</a>`;
-        el.style.opacity = 1;
-        newsIndex = (newsIndex + 1) % newsHeadlines.length;
-      }, 300);
-    }
-    setInterval(rotateNews, 5000);
-    rotateNews();
   </script>
 </body>
 </html>
