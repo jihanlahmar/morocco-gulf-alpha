@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Morocco–Gulf Capital Flow Monitor</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 20px; max-width: 900px; margin: 0 auto; }
+    h1 { color: #1a365d; }
+    .status { background: #f0f9ff; padding: 12px; border-radius: 6px; margin: 20px 0; }
+    canvas { max-width: 100%; }
+    footer { margin-top: 40px; font-size: 0.9em; color: #64748b; }
+  </style>
+</head>
+<body>
+  <h1>Morocco–Gulf Capital Flow Monitor</h1>
+  <p>Live tracking of FX, port, and policy risks for Gulf SWF investments in Morocco.</p>
+
+  <div class="status" id="status">Loading latest snapshot…</div>
+  <canvas id="fxChart" height="120"></canvas>
+
+  <footer>
+    Data updated daily | Public alpha by Jihan Lahmar<br>
+    Source: <a href="https://github.com/jihanlahmar/morocco-gulf-alpha" target="_blank">GitHub Repo</a>
+  </footer>
+
+  <script>
+    fetch('snapshot.json')
+      .then(res => {
+        if (!res.ok) throw new Error('snapshot.json not found');
+        return res.json();
+      })
+      .then(data => {
+        const ts = new Date(data.last_updated).toLocaleString('en-GB', { timeZone: 'UTC' });
+        document.getElementById('status').innerHTML = `
+          Last updated: <strong>${ts} UTC</strong><br>
+          Official MAD/USD: ${data.fx.official_mad_usd
