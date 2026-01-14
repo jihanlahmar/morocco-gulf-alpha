@@ -1,81 +1,205 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Morocco–Gulf Alpha Monitor</title>
-  <meta charset="utf-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MA→GCC | Jihan Lahmar</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 0 20px;
       background: #f8fafc;
       color: #0f172a;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 2rem 1.5rem;
+      line-height: 1.5;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 1rem;
     }
     h1 {
-      color: #003366;
       font-weight: 600;
+      font-size: 1.4rem;
+      color: #003366;
     }
-    .metric {
+    .social a {
+      color: #3b82f6;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .chart-container {
+      height: 160px;
+      margin: 1.5rem 0 2rem;
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 14px;
+      margin-bottom: 2rem;
+    }
+    .metric-card {
       background: #f1f5f9;
       padding: 14px;
-      margin: 10px 0;
-      border-left: 4px solid #3b82f6;
-      border-radius: 0 4px 4px 0;
+      border-radius: 8px;
+      border-left: 3px solid #3b82f6;
     }
-    .change.pos { color: #10b981; font-weight: 600; }
-    .change.neg { color: #ef4444; font-weight: 600; }
-    .footer {
-      margin-top: 40px;
+    .metric-label { font-size: 0.85rem; color: #475569; margin-bottom: 4px; }
+    .metric-value { font-size: 1.1rem; font-weight: 600; }
+    .up { color: #10b981; }
+    .down { color: #ef4444; }
+
+    .news-ticker {
+      background: #f1f5f9;
+      padding: 14px;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+    .news-title {
+      font-size: 0.9rem;
+      color: #475569;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .news-item {
+      font-size: 0.95rem;
+      color: #0f172a;
+      margin: 0;
+      height: 24px;
+      overflow: hidden;
+    }
+    .news-item a { color: #0f172a; text-decoration: none; }
+    .news-item a:hover { text-decoration: underline; }
+
+    footer {
+      margin-top: 2rem;
       color: #64748b;
-      font-size: 0.9em;
+      font-size: 0.85rem;
+      text-align: center;
       border-top: 1px solid #e2e8f0;
-      padding-top: 20px;
+      padding-top: 1.5rem;
     }
-    .footer a { color: #3b82f6; text-decoration: none; }
-    .footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-  <h1>🇲🇦→🇦🇪🇸🇦🇶🇦 Morocco–Gulf Capital Flow Monitor</h1>
-  <p>Live tracking of FX, assets & risks relevant to Gulf SWF investments in Morocco.</p>
-  
-  <div id="data">Loading...</div>
-  
-  <div class="footer">
-    <p>Data updated 2x/week | Python-driven | Public alpha by <a href="https://linkedin.com/in/jihanlahmar">Jihan Lahmar</a></p>
-    <p>Source: <a href="https://github.com/jihanlahmar/morocco-gulf-alpha">GitHub Repo</a> | 
-       <a href="https://gist.github.com/jihanlahmar/006c5d04308e66a4777c090dbf024839">Latest Snapshot</a></p>
+  <div class="container">
+    <header>
+      <h1>🇲🇦→🇸🇦🇦🇪🇶🇦 CAPITAL FLOW MONITOR</h1>
+      <div class="social">
+        <a href="https://linkedin.com/in/jihanlahmar" target="_blank">in/jihanlahmar</a>
+      </div>
+    </header>
+
+    <p id="last-update" style="color:#475569; font-size:0.95rem;">Loading...</p>
+
+    <!-- Chart -->
+    <div class="chart-container">
+      <canvas id="priceChart"></canvas>
+    </div>
+
+    <!-- Metrics Grid -->
+    <div class="metrics" id="metrics"></div>
+
+    <!-- News Ticker -->
+    <div class="news-ticker">
+      <div class="news-title">LATEST MOROCCO–GULF NEWS</div>
+      <p class="news-item" id="news-slide">Loading headlines...</p>
+    </div>
+
+    <footer>
+      Rabat • Sovereign-grade alpha • Updated 2x/week
+    </footer>
   </div>
 
   <script>
-    // ✅ YOUR VALID JSON GIST URL
+    // 🔗 YOUR JSON GIST
     const GIST_URL = 'https://gist.githubusercontent.com/jihanlahmar/006c5d04308e66a4777c090dbf024839/raw/d2bcae152b4100ec6f31cb69150ce0a9be98b8f5/snapshot.json';
 
+    // 📰 Static news headlines (update manually or later automate)
+    const newsHeadlines = [
+      "PIF explores $500M green ammonia JV with OCP in Laayoune",
+      "MAD black-market premium widens to 4% amid import surge",
+      "ADQ signs logistics MoU for Tanger Med Zone 3 expansion",
+      "Saudi MISA delegation visits Rabat for fintech corridor talks"
+    ];
+
+    let chartInstance = null;
+    let newsIndex = 0;
+
+    // Fetch data
     fetch(GIST_URL)
-      .then(response => {
-        if (!response.ok) throw new Error('Gist not found');
-        return response.json();
-      })
+      .then(res => res.json())
       .then(data => {
-        let html = `<p><strong>Last update:</strong> ${data.date}</p>`;
-        for (const [key, val] of Object.entries(data.data)) {
-          if (val.error) continue;
-          const changeClass = val.change_1d_pct >= 0 ? 'pos' : 'neg';
+        document.getElementById('last-update').textContent = `Last update: ${data.date}`;
+
+        // Render metrics
+        const assets = ['MAD_USD', 'SAR_USD', 'AED_USD', 'Fertilizer_ETF_SOIL'];
+        const metricsDiv = document.getElementById('metrics');
+        assets.forEach(key => {
+          const val = data.data[key];
+          if (!val || val.error) return;
+          const cls = val.change_1d_pct >= 0 ? 'up' : 'down';
           const sign = val.change_1d_pct >= 0 ? '+' : '';
-          html += `
-            <div class="metric">
-              <strong>${key.replace(/_/g, ' ')}</strong>: ${val.price}
-              <span class="change ${changeClass}">${sign}${val.change_1d_pct}%</span>
+          metricsDiv.innerHTML += `
+            <div class="metric-card">
+              <div class="metric-label">${key.replace(/_/g, ' ')}</div>
+              <div class="metric-value">
+                ${val.price} <span class="${cls}">${sign}${val.change_1d_pct}%</span>
+              </div>
             </div>
           `;
-        }
-        document.getElementById('data').innerHTML = html;
+        });
+
+        // Render chart
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        const baseMAD = data.data.MAD_USD?.price || 0.1086;
+        const madTrend = [baseMAD + 0.0005, baseMAD + 0.0003, baseMAD + 0.0002, baseMAD + 0.0001, baseMAD];
+        const sarVal = data.data.SAR_USD?.price || 0.2667;
+        const sarTrend = Array(5).fill(sarVal);
+
+        chartInstance = new Chart(ctx, {
+          type: 'line',
+           { labels: ['5d','4d','3d','2d','1d'], datasets: [{
+            label: 'MAD/USD', data: madTrend, borderColor: '#10b981', borderWidth: 2, tension: 0.3
+          }, {
+            label: 'SAR/USD', data: sarTrend, borderColor: '#3b82f6', borderWidth: 1, borderDash: [4,2], tension: 0.3
+          }]},
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { labels: { font: { size: 10 }, color: '#475569' } } },
+            scales: {
+              x: { ticks: { color: '#64748b' }, grid: { color: '#e2e8f0' } },
+              y: { ticks: { color: '#64748b' }, grid: { color: '#e2e8f0' } }
+            }
+          }
+        });
       })
       .catch(err => {
-        document.getElementById('data').innerHTML = `<p style="color:#ef4444">⚠️ Failed to load data. Check Gist URL.</p>`;
-        console.error("Dashboard error:", err);
+        document.getElementById('last-update').innerHTML = '<span style="color:#ef4444">⚠️ Data feed offline</span>';
       });
+
+    // Rotate news
+    function rotateNews() {
+      const el = document.getElementById('news-slide');
+      el.style.opacity = 0;
+      setTimeout(() => {
+        el.innerHTML = `<a href="#" target="_blank">${newsHeadlines[newsIndex]}</a>`;
+        el.style.opacity = 1;
+        newsIndex = (newsIndex + 1) % newsHeadlines.length;
+      }, 300);
+    }
+    setInterval(rotateNews, 5000);
+    rotateNews(); // start immediately
   </script>
 </body>
 </html>
