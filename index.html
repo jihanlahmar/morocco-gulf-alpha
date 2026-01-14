@@ -122,10 +122,10 @@
   </div>
 
   <script>
-    // 🔗 YOUR JSON GIST
+    // 🔗 YOUR VALID JSON GIST (NO TRAILING SPACES)
     const GIST_URL = 'https://gist.githubusercontent.com/jihanlahmar/006c5d04308e66a4777c090dbf024839/raw/e312ca3855724aff445798d81913a1625fe52388/snapshot.json';
 
-    // 📰 Static news headlines (update manually or later automate)
+    // 📰 Static news headlines
     const newsHeadlines = [
       "PIF explores $500M green ammonia JV with OCP in Laayoune",
       "MAD black-market premium widens to 4% amid import surge",
@@ -142,7 +142,6 @@
       .then(data => {
         document.getElementById('last-update').textContent = `Last update: ${data.date}`;
 
-        // Render metrics
         const assets = ['MAD_USD', 'SAR_USD', 'AED_USD', 'Fertilizer_ETF_SOIL'];
         const metricsDiv = document.getElementById('metrics');
         assets.forEach(key => {
@@ -169,17 +168,43 @@
 
         chartInstance = new Chart(ctx, {
           type: 'line',
-           { labels: ['5d','4d','3d','2d','1d'], datasets: [{
-            label: 'MAD/USD', data: madTrend, borderColor: '#10b981', borderWidth: 2, tension: 0.3
-          }, {
-            label: 'SAR/USD', data: sarTrend, borderColor: '#3b82f6', borderWidth: 1, borderDash: [4,2], tension: 0.3
-          }]},
+           {
+            labels: ['5d','4d','3d','2d','1d'],
+            datasets: [{
+              label: 'MAD/USD',
+              data: madTrend,
+              borderColor: '#10b981',
+              borderWidth: 2,
+              tension: 0.3
+            }, {
+              label: 'SAR/USD',
+              data: sarTrend,
+              borderColor: '#3b82f6',
+              borderWidth: 1,
+              borderDash: [4, 2],
+              tension: 0.3
+            }]
+          },
           options: {
-            responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { labels: { font: { size: 10 }, color: '#475569' } } },
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: {
+                  font: { size: 10 },
+                  color: '#475569'
+                }
+              }
+            },
             scales: {
-              x: { ticks: { color: '#64748b' }, grid: { color: '#e2e8f0' } },
-              y: { ticks: { color: '#64748b' }, grid: { color: '#e2e8f0' } }
+              x: {
+                ticks: { color: '#64748b' },
+                grid: { color: '#e2e8f0' }
+              },
+              y: {
+                ticks: { color: '#64748b' },
+                grid: { color: '#e2e8f0' }
+              }
             }
           }
         });
@@ -199,7 +224,7 @@
       }, 300);
     }
     setInterval(rotateNews, 5000);
-    rotateNews(); // start immediately
+    rotateNews();
   </script>
 </body>
 </html>
