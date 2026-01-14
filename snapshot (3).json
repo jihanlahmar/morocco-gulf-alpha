@@ -1,0 +1,17 @@
+{
+  "last_updated": "2026-01-14T19:21:24.695097Z",
+  "fx": {
+    "official_mad_usd": 10.25,
+    "parallel_mad_usd": 10.68,
+    "spread_pct": 4.2
+  },
+  "port": {
+    "tanger_med_vessel_delay_avg_days": 1.8,
+    "laayoune_ammonia_truck_wait_hrs": 4.2
+  },
+  "metadata": {
+    "source": "Manual entry + public sources",
+    "author": "Jihan Lahmar",
+    "repo": "github.com/jihanlahmar/morocco-gulf-alpha"
+  }
+}
