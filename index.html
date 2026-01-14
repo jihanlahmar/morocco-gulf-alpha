@@ -1,182 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MA→GCC | Jihan Lahmar</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Morocco–Gulf Alpha Monitor</title>
+  <meta charset="utf-8">
   <style>
-    body {
-      background: #000;
-      color: #fff;
-      font-family: 'SF Mono', 'Consolas', monospace;
-      margin: 0;
-      padding: 2rem 1.5rem;
-      line-height: 1.5;
-    }
-    .container { max-width: 900px; margin: 0 auto; }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 2.5rem;
-      border-bottom: 1px solid #333;
-      padding-bottom: 1rem;
-    }
-    h1 {
-      font-weight: 400;
-      font-size: 1.3rem;
-      letter-spacing: -0.5px;
-    }
-    .social {
-      font-size: 0.85rem;
-      color: #666;
-    }
-    .social a { color: #666; text-decoration: none; margin-left: 8px; }
-    .social a:hover { color: #fff; }
-
-    .chart-container {
-      height: 180px;
-      margin: 1.5rem 0 2rem;
-      position: relative;
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    .metric-card {
-      background: #0a0a0a;
-      padding: 1rem;
-      border: 1px solid #222;
-      border-radius: 4px;
-    }
-    .metric-label { font-size: 0.8rem; color: #666; margin-bottom: 4px; }
-    .metric-value { font-size: 1.1rem; font-weight: 500; }
-    .up { color: #4ade80; }
-    .down { color: #f87171; }
-
-    footer {
-      margin-top: 3rem;
-      color: #444;
-      font-size: 0.8rem;
-      text-align: center;
-    }
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    h1 { color: #003366; }
+    .metric { background: #f8f9fa; padding: 12px; margin: 8px 0; border-left: 4px solid #007acc; }
+    .change.pos { color: green; }
+    .change.neg { color: red; }
+    .footer { margin-top: 40px; color: #666; font-size: 0.9em; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>🇲🇦→🇸🇦🇦🇪🇶🇦 CAPITAL FLOW MONITOR BY JIHAN LAHMAR </h1>
-      <div class="social">
-        <a href="https://linkedin.com/in/jihanlahmar" target="_blank">in/jihanlahmar</a>
-        <a href="https://twitter.com/jihanlahmar" target="_blank">@jihanlahmar</a>
-      </div>
-    </header>
-
-    <p id="last-update" style="color:#666; font-size:0.9rem;">Loading...</p>
-
-    <div class="chart-container">
-      <canvas id="priceChart"></canvas>
-    </div>
-
-    <div class="metrics" id="metrics"></div>
-
-    <footer>
-      Built in Rabat • Public alpha • Updated 2x/week
-    </footer>
+  <h1>🇲🇦→🇦🇪🇸🇦🇶🇦 Morocco–Gulf Capital Flow Monitor</h1>
+  <p>Live tracking of FX, assets & risks relevant to Gulf SWF investments in Morocco.</p>
+  
+  <div id="data">Loading...</div>
+  
+  <div class="footer">
+    <p>Data updated daily | Python-driven | Public alpha by <a href="https://linkedin.com/in/jihanlahmar">[jihan lahmar]</a></p>
+    <p>Source: <a href="https://github.com/jihanlahmar/morocco-gulf-alpha">GitHub Repo</a> | <a href="https://gist.github.com/...">Latest Snapshot</a></p>
   </div>
 
   <script>
-    // 🔁 REPLACE THIS URL WITH YOUR ACTUAL JSON GIST RAW LINK
-    const GIST_URL = "https://gist.githubusercontent.com/jihanlahmar/006c5d04308e66a4777c090dbf024839/raw/92b7d6934bd1bc62cbdb52b859af41ce32486c76/gistfile1.txt";
-
-    let chartInstance = null;
-
-    fetch(GIST_URL)
-      .then(res => {
-        if (!res.ok) throw new Error('Gist not found');
-        return res.json();
-      })
-      .then(data => {
-        document.getElementById('last-update').textContent = `Last update: ${data.date}`;
-
-        const assets = ['MAD_USD', 'SAR_USD', 'AED_USD', 'TASI_Saudi', 'ADX_UAE', 'Fertilizer_ETF_SOIL'];
-        const metricsDiv = document.getElementById('metrics');
-
-        assets.forEach(key => {
-          const val = data.data[key];
-          if (!val || val.error) return;
-
-          const change = val.change_1d_pct;
-          const cls = change >= 0 ? 'up' : 'down';
-          const sign = change >= 0 ? '+' : '';
-
-          metricsDiv.innerHTML += `
-            <div class="metric-card">
-              <div class="metric-label">${key.replace(/_/g, ' ')}</div>
-              <div class="metric-value">${val.price} <span class="${cls}">${sign}${change}%</span></div>
+    // Fetch your latest snapshot (replace with your Gist raw URL)
+    fetch('https://gist.githubusercontent.com/jihanlahmar/006c5d04308e66a4777c090dbf024839/raw/92b7d6934bd1bc62cbdb52b859af41ce32486c76/gistfile1.txt')
+      .then(r => r.json())
+      .then(d => {
+        let html = `<p><strong>Last update:</strong> ${d.date}</p>`;
+        for (const [key, val] of Object.entries(d.data)) {
+          if (val.error) continue;
+          const changeClass = val.change_1d_pct >= 0 ? 'pos' : 'neg';
+          html += `
+            <div class="metric">
+              <strong>${key}</strong>: ${val.price} 
+              <span class="change ${changeClass}">(${val.change_1d_pct}%)</span>
             </div>
           `;
-        });
-
-        // Simple chart: MAD vs SAR (using current + fake 4-day history for visual)
-        const ctx = document.getElementById('priceChart').getContext('2d');
-        const days = ['5d', '4d', '3d', '2d', '1d', 'Today'];
-        const madBase = data.data.MAD_USD?.price || 0.1082;
-        const madFake = [
-          madBase + 0.0004,
-          madBase + 0.0003,
-          madBase + 0.0002,
-          madBase + 0.0001,
-          madBase,
-          madBase
-        ];
-        const sarVal = data.data.SAR_USD?.price || 0.2667;
-        const sarFake = Array(6).fill(sarVal);
-
-        if (chartInstance) chartInstance.destroy();
-        chartInstance = new Chart(ctx, {
-          type: 'line',
-           {
-            labels: days,
-            datasets: [{
-              label: 'MAD/USD',
-               madFake,
-              borderColor: '#4ade80',
-              borderWidth: 2,
-              fill: false,
-              tension: 0.3
-            }, {
-              label: 'SAR/USD',
-               sarFake,
-              borderColor: '#60a5fa',
-              borderWidth: 1,
-              borderDash: [4, 2],
-              fill: false,
-              tension: 0.3
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                labels: { color: '#666', font: { size: 10 } }
-              }
-            },
-            scales: {
-              x: { ticks: { color: '#444' }, grid: { color: '#111' } },
-              y: { ticks: { color: '#444' }, grid: { color: '#111' } }
-            }
-          }
-        });
+        }
+        document.getElementById('data').innerHTML = html;
       })
-      .catch(err => {
-        document.getElementById('last-update').innerHTML = '<span style="color:#f87171">⚠️ Data feed offline</span>';
-      });
+      .catch(e => document.getElementById('data').innerHTML = '<p>⚠️ Loading data...</p>');
   </script>
 </body>
 </html>
