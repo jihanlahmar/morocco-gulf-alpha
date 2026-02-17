@@ -1,47 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Morocco–Gulf Alpha Monitor</title>
-  <meta charset="utf-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jihan Lahmar | Morocco-Gulf Analytics</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
-    h1 { color: #003366; }
-    .metric { background: #f8f9fa; padding: 12px; margin: 8px 0; border-left: 4px solid #007acc; }
-    .change.pos { color: green; }
-    .change.neg { color: red; }
-    .footer { margin-top: 40px; color: #666; font-size: 0.9em; }
+    /* === MINIMALIST CORE === */
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --accent: #0066cc;
+      --muted: #666;
+      --border: #eee;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f0f0f;
+        --text: #f0f0f0;
+        --accent: #4da6ff;
+        --muted: #aaa;
+        --border: #333;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+    }
+    .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.85em;
+      margin: 4px 0;
+    }
+    .mono { font-family: ui-monospace, SFMono-Regular, monospace; }
+    .center { text-align: center; }
+    .muted { color: var(--muted); font-size: 0.95em; }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+    @media (max-width: 600px) {
+      body { padding: 1.5rem 1rem; }
+      .card { padding: 1rem; }
+    }
   </style>
 </head>
 <body>
-  <h1>🇲🇦→🇦🇪🇸🇦🇶🇦 Morocco–Gulf Capital Flow Monitor</h1>
-  <p>Live tracking of FX, assets & risks relevant to Gulf SWF investments in Morocco.</p>
-  
-  <div id="data">Loading...</div>
-  
-  <div class="footer">
-    <p>Data updated daily | Python-driven | Public alpha by <a href="https://linkedin.com/in/jihanlahmar">[jihan lahmar]</a></p>
-    <p>Source: <a href="https://github.com/jihanlahmar/morocco-gulf-alpha">GitHub Repo</a> | <a href="https://gist.github.com/...">Latest Snapshot</a></p>
-  </div>
+
+  <!-- HEADER: Name + Focus -->
+  <header class="center">
+    <h1>Jihan Lahmar</h1>
+    <p class="muted">Morocco-Gulf exposure analytics | Python-automated briefs</p>
+    <p><span class="badge">🇲🇦→🇸🇦</span> <span class="badge">Proof-first</span> <span class="badge">On-demand</span></p>
+  </header>
+
+  <!-- PROOF: Latest Artifact -->
+  <section class="card">
+    <h2>🔬 Latest Proof</h2>
+    <p><strong>Monte Carlo Port Risk Simulator</strong></p>
+    <p class="muted">30-day VaR for Morocco-Gulf exposures | 10k simulations | GBM model</p>
+    <ul style="margin:1rem 0 0 1.2rem">
+      <li><a href="briefs/tanger-med-var-2026.pdf" target="_blank">📄 Download 1-page brief (PDF)</a></li>
+      <li><a href="https://github.com/jihanlahmar/morocco-gulf-alpha/blob/main/monte_carlo_port.py" target="_blank">🔗 View code (GitHub)</a></li>
+      <li><span class="mono">pip install -r requirements.txt && python monte_carlo_port.py</span></li>
+    </ul>
+  </section>
+
+  <!-- ENGAGEMENT: How to Work Together -->
+  <section class="card">
+    <h2>⚙️ Engagement</h2>
+    <ul style="margin-left:1.2rem">
+      <li>✅ Paid pilot: 1 brief/week × 4 weeks</li>
+      <li>✅ Deliverable: PDF + GitHub + 15-min Loom walkthrough</li>
+      <li>✅ Focus: Narrow Morocco-Gulf exposures only</li>
+      <li>❌ No branding, no macro commentary, no free work</li>
+    </ul>
+  </section>
+
+  <!-- CONTACT: Secure Only -->
+  <section class="card">
+    <h2>🔐 Contact</h2>
+    <p>For pilot discussion or secure brief access:</p>
+    <p class="mono" style="margin:0.5rem 0">jihan.lahmar@protonmail.com</p>
+    <p class="muted">Signal available on request • No LinkedIn DMs for sensitive topics</p>
+  </section>
+
+  <!-- FOOTER: Minimal -->
+  <footer class="center muted" style="margin-top:2rem; font-size:0.9em">
+    <p>Last updated: <span id="date"></span> • <a href="https://github.com/jihanlahmar/morocco-gulf-alpha">GitHub</a></p>
+  </footer>
 
   <script>
-    // Fetch your latest snapshot (replace with your Gist raw URL)
-    fetch('https://gist.githubusercontent.com/jihanlahmar/006c5d04308e66a4777c090dbf024839/raw/e312ca3855724aff445798d81913a1625fe52388/snapshot.json')
-      .then(r => r.json())
-      .then(d => {
-        let html = `<p><strong>Last update:</strong> ${d.date}</p>`;
-        for (const [key, val] of Object.entries(d.data)) {
-          if (val.error) continue;
-          const changeClass = val.change_1d_pct >= 0 ? 'pos' : 'neg';
-          html += `
-            <div class="metric">
-              <strong>${key}</strong>: ${val.price} 
-              <span class="change ${changeClass}">(${val.change_1d_pct}%)</span>
-            </div>
-          `;
-        }
-        document.getElementById('data').innerHTML = html;
-      })
-      .catch(e => document.getElementById('data').innerHTML = '<p>⚠️ Loading data...</p>');
+    // Auto-update date
+    document.getElementById('date').textContent = new Date().toISOString().split('T')[0];
   </script>
+
 </body>
 </html>
