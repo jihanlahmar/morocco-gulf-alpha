@@ -5,43 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Jihan Lahmar | Morocco-Gulf Analytics</title>
   <style>
-    /* === CLASSY MINIMALIST CORE === */
-    :root {
-      --bg: #ffffff;
-      --text: #000000;
-      --muted: #666666;
-      --border: #e0e0e0;
-      --shadow: 0 1px 3px rgba(0,0,0,0.08);
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0a0a0a;
-        --text: #ffffff;
-        --muted: #999999;
-        --border: #2a2a2a;
-        --shadow: 0 1px 3px rgba(255,255,255,0.08);
-      }
-    }
+    /* === SAME STYLES AS BEFORE === */
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
     body {
       font-family: "Georgia", "Times New Roman", serif;
-      background: var(--bg);
-      color: var(--text);
+      background: #0a0a0a;
+      color: #ffffff;
       line-height: 1.75;
-      padding: 3rem 1.5rem;
-      max-width: 680px;
+      min-height: 100vh;
+    }
+    .bg-layer {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+    }
+    .bg-gradient {
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(40,40,40,0.8) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(30,30,30,0.9) 0%, transparent 50%),
+        linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+    }
+    .bg-noise {
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+    .container {
+      max-width: 720px;
       margin: 0 auto;
-      -webkit-font-smoothing: antialiased;
+      padding: 4rem 2rem;
+      position: relative;
+      z-index: 1;
     }
     a {
-      color: var(--text);
+      color: #ffffff;
       text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.2s ease;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      transition: all 0.3s ease;
     }
     a:hover {
-      border-bottom-color: var(--text);
+      border-bottom-color: #ffffff;
+      opacity: 0.8;
     }
     .sans {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -50,192 +54,172 @@
     }
     .mono {
       font-family: ui-monospace, SFMono-Regular, "Menlo", monospace;
-      font-size: 0.9em;
-      color: var(--muted);
+      font-size: 0.85em;
+      color: rgba(255,255,255,0.6);
     }
     
     /* === PROFILE PHOTO === */
-    .profile {
-      text-align: center;
-      margin: 0 0 2.5rem 0;
-    }
-    .avatar {
-      width: 96px;
-      height: 96px;
+    .profile-photo {
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       object-fit: cover;
-      border: 1px solid var(--border);
-      margin: 0 auto 1rem;
+      border: 2px solid rgba(255,255,255,0.2);
+      margin: 0 auto 2rem;
       display: block;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: rgba(255,255,255,0.05);
     }
-    .avatar:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow);
+    .profile-photo:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border-color: rgba(255,255,255,0.4);
     }
     
-    /* === TYPOGRAPHY === */
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
     h1 {
-      font-size: 1.75rem;
+      font-size: 2rem;
       font-weight: 400;
       letter-spacing: -0.02em;
-      margin: 0.5rem 0 0.25rem;
+      margin: 0 0 0.5rem;
     }
     .subtitle {
-      color: var(--muted);
-      font-size: 1rem;
-      margin: 0 0 1rem;
+      color: rgba(255,255,255,0.6);
+      font-size: 1.05rem;
       font-style: italic;
+      margin: 0 0 1.5rem;
     }
     .tags {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.75rem;
       justify-content: center;
       flex-wrap: wrap;
-      margin: 1rem 0 2rem;
     }
     .tag {
-      font-size: 0.8rem;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 2px 10px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 4px 12px;
       border-radius: 3px;
       letter-spacing: 0.05em;
       text-transform: uppercase;
     }
-    
-    /* === SECTIONS === */
     section {
-      margin: 2rem 0;
-      padding: 1.5rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-    section:last-of-type {
-      border-bottom: none;
-    }
-    h2 {
-      font-size: 1.1rem;
-      font-weight: 500;
-      margin: 0 0 1rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    p { margin: 0.75rem 0; }
-    ul {
-      margin: 0.75rem 0 0.75rem 1.5rem;
-      padding: 0;
-    }
-    li {
-      margin: 0.5rem 0;
-      color: var(--text);
-    }
-    
-    /* === FOOTER === */
-    footer {
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.9em;
-      margin-top: 3rem;
-      padding-top: 2rem;
-      border-top: 1px solid var(--border);
-    }
-    footer a { color: var(--muted); }
-    
-    /* === SUBTLE "4D" DEPTH === */
-    .card-hover {
+      margin: 2.5rem 0;
+      padding: 2rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      backdrop-filter: blur(10px);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .card-hover:hover {
-      transform: translateY(-1px);
-      box-shadow: var(--shadow);
+    section:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
     }
-    
-    /* === MOBILE === */
+    h2 {
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin: 0 0 1.25rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 0.75rem;
+    }
+    p { margin: 0.75rem 0; }
+    ul { margin: 0.75rem 0 0.75rem 1.5rem; }
+    li { margin: 0.6rem 0; color: rgba(255,255,255,0.9); }
+    footer {
+      text-align: center;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.85em;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
     @media (max-width: 600px) {
-      body { padding: 2rem 1.25rem; }
-      h1 { font-size: 1.5rem; }
-      .avatar { width: 80px; height: 80px; }
-    }
-    
-    /* === PRINT === */
-    @media print {
-      body { padding: 0; max-width: none; }
-      a { text-decoration: none !important; border: none !important; }
-      .avatar { border: 1px solid #ccc; }
+      .container { padding: 3rem 1.5rem; }
+      h1 { font-size: 1.65rem; }
+      .profile-photo { width: 100px; height: 100px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- PROFILE: Photo + Name + Focus -->
-  <header class="profile">
-    <!-- REPLACE THIS SRC WITH YOUR PHOTO URL -->
-    <img 
-      src="https://avatars.githubusercontent.com/u/YOUR_GITHUB_ID?v=4" 
-      alt="Jihan Lahmar" 
-      class="avatar"
-      onerror="this.style.display='none'"
-    />
-    <h1>Jihan Lahmar</h1>
-    <p class="subtitle">Morocco-Gulf exposure analytics</p>
-    <div class="tags sans">
-      <span class="tag">Proof-first</span>
-      <span class="tag">On-demand</span>
-      <span class="tag">🇲🇦→🇸🇦</span>
-    </div>
-  </header>
+  <!-- BACKGROUND -->
+  <div class="bg-layer bg-gradient"></div>
+  <div class="bg-layer bg-noise"></div>
 
-  <!-- PROOF: Latest Artifact -->
-  <section class="card-hover">
-    <h2 class="sans">Latest Proof</h2>
-    <p><strong>Monte Carlo Port Risk Simulator</strong></p>
-    <p class="sans" style="color:var(--muted);margin:0.5rem 0">
-      30-day VaR for Morocco-Gulf exposures | 10k simulations | GBM model
-    </p>
-    <ul class="sans">
-      <li><a href="briefs/tanger-med-var-2026.pdf" target="_blank">Download brief (PDF)</a></li>
-      <li><a href="https://github.com/jihanlahmar/morocco-gulf-alpha/blob/main/monte_carlo_port.py" target="_blank">View code (GitHub)</a></li>
-      <li class="mono">pip install -r requirements.txt && python monte_carlo_port.py</li>
-    </ul>
-  </section>
+  <!-- CONTENT -->
+  <div class="container">
 
-  <!-- ENGAGEMENT: How to Work Together -->
-  <section class="card-hover">
-    <h2 class="sans">Engagement</h2>
-    <ul class="sans">
-      <li>Paid pilot: 1 brief/week × 4 weeks</li>
-      <li>Deliverable: PDF + GitHub + 15-min walkthrough</li>
-      <li>Focus: Narrow Morocco-Gulf exposures only</li>
-      <li style="color:var(--muted)">No branding • No macro commentary • No free work</li>
-    </ul>
-  </section>
+    <!-- HEADER: GitHub Photo + Name -->
+    <header>
+      <!-- GITHUB AVATAR - AUTO UPDATES -->
+      <img 
+        src="https://github.com/jihanlahmar.png" 
+        alt="Jihan Lahmar" 
+        class="profile-photo"
+        onerror="this.style.display='none'"
+      />
+      <h1>Jihan Lahmar</h1>
+      <p class="subtitle">Morocco-Gulf exposure analytics</p>
+      <div class="tags sans">
+        <span class="tag">Proof-first</span>
+        <span class="tag">On-demand</span>
+        <span class="tag">🇲→🇸</span>
+      </div>
+    </header>
 
-  <!-- CONTACT: Professional Links -->
-  <section class="card-hover">
-    <h2 class="sans">Contact</h2>
-    <p class="sans">For pilot discussion or secure brief access:</p>
-    <ul class="sans" style="margin-left:0">
-      <li><a href="mailto:jihan.lahmar@protonmail.com">jihan.lahmar@protonmail.com</a></li>
-      <li>
-        <a href="https://linkedin.com/in/jihanlahmar" target="_blank" rel="noopener">
-          LinkedIn: /in/jihanlahmar
-        </a>
-      </li>
-      <li class="mono" style="margin-top:0.5rem">Signal available on request</li>
-    </ul>
-  </section>
+    <!-- PROOF -->
+    <section>
+      <h2 class="sans">Latest Proof</h2>
+      <p style="font-size:1.1rem;margin-bottom:0.75rem"><strong>Monte Carlo Port Risk Simulator</strong></p>
+      <p class="sans" style="color:rgba(255,255,255,0.6)">
+        30-day VaR | 10k simulations | GBM model
+      </p>
+      <ul class="sans">
+        <li><a href="briefs/tanger-med-var-2026.pdf">Download brief (PDF)</a></li>
+        <li><a href="https://github.com/jihanlahmar/morocco-gulf-alpha">View code (GitHub)</a></li>
+        <li class="mono" style="margin-top:1rem">pip install -r requirements.txt && python monte_carlo_port.py</li>
+      </ul>
+    </section>
 
-  <!-- FOOTER: Minimal -->
-  <footer class="sans">
-    <p>
-      Last updated: <span id="date"></span><br/>
-      <a href="https://github.com/jihanlahmar/morocco-gulf-alpha">GitHub</a>
-    </p>
-  </footer>
+    <!-- ENGAGEMENT -->
+    <section>
+      <h2 class="sans">Engagement</h2>
+      <ul class="sans">
+        <li>Paid pilot: 1 brief/week × 4 weeks</li>
+        <li>Deliverable: PDF + GitHub + walkthrough</li>
+        <li>Focus: Narrow Morocco-Gulf exposures only</li>
+        <li style="color:rgba(255,255,255,0.5)">No branding • No free work</li>
+      </ul>
+    </section>
+
+    <!-- CONTACT -->
+    <section>
+      <h2 class="sans">Contact</h2>
+      <ul class="sans" style="margin-left:0">
+        <li><a href="mailto:jihan.lahmar@protonmail.com">jihan.lahmar@protonmail.com</a></li>
+        <li><a href="https://linkedin.com/in/jihanlahmar">LinkedIn</a></li>
+        <li class="mono">Signal on request</li>
+      </ul>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="sans">
+      <p>Last updated: <span id="date"></span></p>
+    </footer>
+
+  </div>
 
   <script>
-    // Auto-update date
     document.getElementById('date').textContent = new Date().toISOString().split('T')[0];
   </script>
 
