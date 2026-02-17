@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,103 +5,233 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Jihan Lahmar | Morocco-Gulf Analytics</title>
   <style>
-    /* === MINIMALIST CORE === */
+    /* === CLASSY MINIMALIST CORE === */
     :root {
       --bg: #ffffff;
-      --text: #1a1a1a;
-      --accent: #0066cc;
-      --muted: #666;
-      --border: #eee;
+      --text: #000000;
+      --muted: #666666;
+      --border: #e0e0e0;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #0f0f0f;
-        --text: #f0f0f0;
-        --accent: #4da6ff;
-        --muted: #aaa;
-        --border: #333;
+        --bg: #0a0a0a;
+        --text: #ffffff;
+        --muted: #999999;
+        --border: #2a2a2a;
+        --shadow: 0 1px 3px rgba(255,255,255,0.08);
       }
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: "Georgia", "Times New Roman", serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.6;
-      padding: 2rem 1rem;
-      max-width: 720px;
+      line-height: 1.75;
+      padding: 3rem 1.5rem;
+      max-width: 680px;
       margin: 0 auto;
+      -webkit-font-smoothing: antialiased;
     }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .card {
+    a {
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+    a:hover {
+      border-bottom-color: var(--text);
+    }
+    .sans {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 0.95em;
+      letter-spacing: 0.01em;
+    }
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, "Menlo", monospace;
+      font-size: 0.9em;
+      color: var(--muted);
+    }
+    
+    /* === PROFILE PHOTO === */
+    .profile {
+      text-align: center;
+      margin: 0 0 2.5rem 0;
+    }
+    .avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.25rem;
-      margin: 1.5rem 0;
+      margin: 0 auto 1rem;
+      display: block;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .badge {
-      display: inline-block;
-      background: var(--accent);
-      color: white;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.85em;
-      margin: 4px 0;
+    .avatar:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
     }
-    .mono { font-family: ui-monospace, SFMono-Regular, monospace; }
-    .center { text-align: center; }
-    .muted { color: var(--muted); font-size: 0.95em; }
-    hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+    
+    /* === TYPOGRAPHY === */
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin: 0.5rem 0 0.25rem;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 1rem;
+      margin: 0 0 1rem;
+      font-style: italic;
+    }
+    .tags {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 1rem 0 2rem;
+    }
+    .tag {
+      font-size: 0.8rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 2px 10px;
+      border-radius: 3px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    
+    /* === SECTIONS === */
+    section {
+      margin: 2rem 0;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    section:last-of-type {
+      border-bottom: none;
+    }
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin: 0 0 1rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    p { margin: 0.75rem 0; }
+    ul {
+      margin: 0.75rem 0 0.75rem 1.5rem;
+      padding: 0;
+    }
+    li {
+      margin: 0.5rem 0;
+      color: var(--text);
+    }
+    
+    /* === FOOTER === */
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9em;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--muted); }
+    
+    /* === SUBTLE "4D" DEPTH === */
+    .card-hover {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow);
+    }
+    
+    /* === MOBILE === */
     @media (max-width: 600px) {
-      body { padding: 1.5rem 1rem; }
-      .card { padding: 1rem; }
+      body { padding: 2rem 1.25rem; }
+      h1 { font-size: 1.5rem; }
+      .avatar { width: 80px; height: 80px; }
+    }
+    
+    /* === PRINT === */
+    @media print {
+      body { padding: 0; max-width: none; }
+      a { text-decoration: none !important; border: none !important; }
+      .avatar { border: 1px solid #ccc; }
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER: Name + Focus -->
-  <header class="center">
+  <!-- PROFILE: Photo + Name + Focus -->
+  <header class="profile">
+    <!-- REPLACE THIS SRC WITH YOUR PHOTO URL -->
+    <img 
+      src="https://avatars.githubusercontent.com/u/YOUR_GITHUB_ID?v=4" 
+      alt="Jihan Lahmar" 
+      class="avatar"
+      onerror="this.style.display='none'"
+    />
     <h1>Jihan Lahmar</h1>
-    <p class="muted">Morocco-Gulf exposure analytics | Python-automated briefs</p>
-    <p><span class="badge">🇲🇦→🇸🇦</span> <span class="badge">Proof-first</span> <span class="badge">On-demand</span></p>
+    <p class="subtitle">Morocco-Gulf exposure analytics</p>
+    <div class="tags sans">
+      <span class="tag">Proof-first</span>
+      <span class="tag">On-demand</span>
+      <span class="tag">🇲🇦→🇸🇦</span>
+    </div>
   </header>
 
   <!-- PROOF: Latest Artifact -->
-  <section class="card">
-    <h2>🔬 Latest Proof</h2>
+  <section class="card-hover">
+    <h2 class="sans">Latest Proof</h2>
     <p><strong>Monte Carlo Port Risk Simulator</strong></p>
-    <p class="muted">30-day VaR for Morocco-Gulf exposures | 10k simulations | GBM model</p>
-    <ul style="margin:1rem 0 0 1.2rem">
-      <li><a href="briefs/tanger-med-var-2026.pdf" target="_blank">📄 Download 1-page brief (PDF)</a></li>
-      <li><a href="https://github.com/jihanlahmar/morocco-gulf-alpha/blob/main/monte_carlo_port.py" target="_blank">🔗 View code (GitHub)</a></li>
-      <li><span class="mono">pip install -r requirements.txt && python monte_carlo_port.py</span></li>
+    <p class="sans" style="color:var(--muted);margin:0.5rem 0">
+      30-day VaR for Morocco-Gulf exposures | 10k simulations | GBM model
+    </p>
+    <ul class="sans">
+      <li><a href="briefs/tanger-med-var-2026.pdf" target="_blank">Download brief (PDF)</a></li>
+      <li><a href="https://github.com/jihanlahmar/morocco-gulf-alpha/blob/main/monte_carlo_port.py" target="_blank">View code (GitHub)</a></li>
+      <li class="mono">pip install -r requirements.txt && python monte_carlo_port.py</li>
     </ul>
   </section>
 
   <!-- ENGAGEMENT: How to Work Together -->
-  <section class="card">
-    <h2>⚙️ Engagement</h2>
-    <ul style="margin-left:1.2rem">
-      <li>✅ Paid pilot: 1 brief/week × 4 weeks</li>
-      <li>✅ Deliverable: PDF + GitHub + 15-min Loom walkthrough</li>
-      <li>✅ Focus: Narrow Morocco-Gulf exposures only</li>
-      <li>❌ No branding, no macro commentary, no free work</li>
+  <section class="card-hover">
+    <h2 class="sans">Engagement</h2>
+    <ul class="sans">
+      <li>Paid pilot: 1 brief/week × 4 weeks</li>
+      <li>Deliverable: PDF + GitHub + 15-min walkthrough</li>
+      <li>Focus: Narrow Morocco-Gulf exposures only</li>
+      <li style="color:var(--muted)">No branding • No macro commentary • No free work</li>
     </ul>
   </section>
 
-  <!-- CONTACT: Secure Only -->
-  <section class="card">
-    <h2>🔐 Contact</h2>
-    <p>For pilot discussion or secure brief access:</p>
-    <p class="mono" style="margin:0.5rem 0">jihan.lahmar@protonmail.com</p>
-    <p class="muted">Signal available on request • No LinkedIn DMs for sensitive topics</p>
+  <!-- CONTACT: Professional Links -->
+  <section class="card-hover">
+    <h2 class="sans">Contact</h2>
+    <p class="sans">For pilot discussion or secure brief access:</p>
+    <ul class="sans" style="margin-left:0">
+      <li><a href="mailto:jihan.lahmar@protonmail.com">jihan.lahmar@protonmail.com</a></li>
+      <li>
+        <a href="https://linkedin.com/in/jihanlahmar" target="_blank" rel="noopener">
+          LinkedIn: /in/jihanlahmar
+        </a>
+      </li>
+      <li class="mono" style="margin-top:0.5rem">Signal available on request</li>
+    </ul>
   </section>
 
   <!-- FOOTER: Minimal -->
-  <footer class="center muted" style="margin-top:2rem; font-size:0.9em">
-    <p>Last updated: <span id="date"></span> • <a href="https://github.com/jihanlahmar/morocco-gulf-alpha">GitHub</a></p>
+  <footer class="sans">
+    <p>
+      Last updated: <span id="date"></span><br/>
+      <a href="https://github.com/jihanlahmar/morocco-gulf-alpha">GitHub</a>
+    </p>
   </footer>
 
   <script>
